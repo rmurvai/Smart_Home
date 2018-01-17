@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server_http", "Server_http\Server_http.csproj", "{BEACE4C2-DA4D-4F75-A0BB-952BA637A4BC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart_home", "Smart_home\Smart_home.csproj", "{BEACE4C2-DA4D-4F75-A0BB-952BA637A4BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
