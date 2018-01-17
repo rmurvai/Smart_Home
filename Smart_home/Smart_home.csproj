@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BEACE4C2-DA4D-4F75-A0BB-952BA637A4BC}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Server_http</RootNamespace>
-    <AssemblyName>Server_http</AssemblyName>
+    <RootNamespace>Smart_home</RootNamespace>
+    <AssemblyName>Smart_home</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
