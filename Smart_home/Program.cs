@@ -17,6 +17,10 @@ namespace Server_http
             //create server with auto assigned port
             myServer = new SimpleHTTPServer(myFolder);
 
+            //
+            // usage http://127.0.0.1:port/(html file)
+            //
+
 
             //Creating server with specified port
             //myServer = new SimpleHTTPServer(myFolder, 8085);
