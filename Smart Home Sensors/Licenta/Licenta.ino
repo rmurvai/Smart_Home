@@ -48,14 +48,13 @@ int               pir_control_led_Pin = 13;// the pin where our pir led is conne
 void CalibratePirSensor()
 {
     //give the sensor some time to calibrate
-    Serial.print("Start calibrating movement sensor ");
+    Serial.print("2-1<>");
     for (int i = 0; i < dht_calibration_time; i++)
     {
         Serial.print(".");
         delay(1000);
     }
-    Serial.println(" End calibrating movement sensor");
-    Serial.println("SENSOR ACTIVE");
+    Serial.println("2-2<>");
     delay(50);
 }
 
@@ -107,10 +106,19 @@ void loop()
             // makes sure we wait for a transition to LOW before any further output is made:
             //
             pir_lock_Low = false;
-            Serial.println( "---" );
-            Serial.print( "motion detected at " );
-            Serial.print( millis() / 1000 );
-            Serial.println( " sec" );
+
+            //
+            // serialized
+            //
+            String str_serial = "";
+            str_serial = str_serial + "2-3<";
+            str_serial = str_serial + millis();
+            str_serial = str_serial + "<";
+
+            //
+            // write data to serial
+            //
+            Serial.println( str_serial );
             delay( 50 );
         }
         pir_take_Low_time = true;
@@ -135,9 +143,21 @@ void loop()
             //makes sure this block of code is only executed again after a new motion sequence has been detected
             //
             pir_lock_Low = true;
-            Serial.print( "motion ended at " );      //output
-            Serial.print( ( millis() - pir_pause_time ) / 1000 );
-            Serial.println( " sec" );
+
+            int pir_ended_at = millis() - pir_pause_time;
+
+            //
+            // serialized
+            // 
+            String str_serial = "";
+            str_serial = str_serial + "2-4<";
+            str_serial = str_serial + pir_ended_at;
+            str_serial = str_serial + "<";
+
+            //
+            // write data to serial
+            // 
+            Serial.println(str_serial);
             delay( 50 );
         }
     }
@@ -162,5 +182,28 @@ void loop()
     Serial.print( dht_temperature_value );
     Serial.println( " Celsius" );
 
+    //
+    // serialize data & write
+    //
+    char temp_str[10] = {};
+    dtostrf(dht_temperature_value, 2, 2, temp_str);
+
+    String str_serial = "";
+    str_serial = str_serial + "1-1<";
+    str_serial = str_serial + temp_str;
+    str_serial = str_serial + ">";
+
+    Serial.println(str_serial);
+
+
+    char humidity_str[10] = {};
+    dtostrf(dht_humidity_value, 2, 2, humidity_str);
+
+    str_serial = "";
+    str_serial = str_serial + "1-2<";
+    str_serial = str_serial + humidity_str;
+    str_serial = str_serial + ">";
+
+    Serial.println(str_serial);
 }
 

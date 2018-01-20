@@ -7,13 +7,85 @@ using System.Threading.Tasks;
 
 namespace Server_http
 {
+
     class MainClass
     {
         //
-        // serial port
+        // Global serial port
         //
         SerialPort _serial_port = new SerialPort("COM3", 9600, Parity.None, 8, StopBits.One);
+        SensorData sensor_data;
 
+        //
+        // Constructor
+        //
+        private MainClass()
+        {
+            //
+            //Set the datareceived event handler
+            //
+            _serial_port.DataReceived += new SerialDataReceivedEventHandler(sp_DataReceived);
+            
+            //
+            //Open the serial port
+            //
+            _serial_port.Open();
+
+            //
+            //Read from the console, to stop it from closing.
+            //
+            Console.Read();
+        }
+
+        //
+        //sp_DataReceived
+        //
+        private void sp_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            //
+            // if we have data
+            //
+            string str_serial = _serial_port.ReadExisting();
+
+            //
+            // DEBUG  Write the serial port data to the console
+            //
+            Console.Write(str_serial);
+
+            //
+            // compare data
+            // 
+            if(str_serial.StartsWith("1-1<"/*temperature*/,StringComparison.OrdinalIgnoreCase))
+            {
+
+            }
+            else if (str_serial.StartsWith("1-2<"/*humidity*/, StringComparison.OrdinalIgnoreCase))
+            {
+
+            }
+            else if (str_serial.StartsWith("2-1<"/*pir calibration started*/, StringComparison.OrdinalIgnoreCase))
+            {
+
+            }
+            else if (str_serial.StartsWith("2-2<"/*pir calibration ended*/, StringComparison.OrdinalIgnoreCase))
+            {
+
+            }
+            else if (str_serial.StartsWith("2-3<"/*pir movment detected*/, StringComparison.OrdinalIgnoreCase))
+            {
+
+            }
+            else if (str_serial.StartsWith("2-4<"/*pir movment ended*/, StringComparison.OrdinalIgnoreCase))
+            {
+
+            }
+
+
+        }
+
+        //
+        // Main entry
+        //
         static void Main(string[] args)
         {
 
@@ -36,7 +108,7 @@ namespace Server_http
             Console.WriteLine("Server is running on this port: " + myServer.Port.ToString());
 
             //Open the Program function
-            new Main();
+            new MainClass();
 
             for (; ; );
 
@@ -44,22 +116,6 @@ namespace Server_http
             //Stop method should be called before exit.
             myServer.Stop();
 
-        }
-
-        private MainClass()
-        {
-            //Set the datareceived event handler
-            _serial_port.DataReceived += new SerialDataReceivedEventHandler(sp_DataReceived);
-            //Open the serial port
-            _serial_port.Open();
-            //Read from the console, to stop it from closing.
-            Console.Read();
-        }
-
-        private void sp_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            //Write the serial port data to the console.
-            Console.Write(_serial_port.ReadExisting());
         }
     }
 }
