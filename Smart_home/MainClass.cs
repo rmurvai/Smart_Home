@@ -57,6 +57,9 @@ namespace Server_http
             // 
             if(str_serial.StartsWith("1-1<"/*temperature*/,StringComparison.OrdinalIgnoreCase))
             {
+                //
+                // parse the serialized data
+                //
 
             }
             else if (str_serial.StartsWith("1-2<"/*humidity*/, StringComparison.OrdinalIgnoreCase))
@@ -79,7 +82,18 @@ namespace Server_http
             {
 
             }
+            else if (str_serial.StartsWith("3-1<"/*mq2 lpg*/, StringComparison.OrdinalIgnoreCase))
+            {
 
+            }
+            else if (str_serial.StartsWith("3-2<"/*mq2 co*/, StringComparison.OrdinalIgnoreCase))
+            {
+
+            }
+            else if (str_serial.StartsWith("3-3<"/*mq2 smoke*/, StringComparison.OrdinalIgnoreCase))
+            {
+
+            }
 
         }
 

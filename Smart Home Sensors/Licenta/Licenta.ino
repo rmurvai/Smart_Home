@@ -7,6 +7,7 @@
 //Libraries
 #include <Adafruit_Sensor.h>
 #include <DHT.h>;
+#include <MQ2.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -15,6 +16,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 #define DHTPIN  7       // set the pin for the temperature sensor
 #define DHTTYPE DHT22   // set the type of the temperature sensor => DHT 22  (AM2302)
+#define MQ2PIN  A0      // set the pin for mq2 sensor
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -23,6 +25,13 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 DHT dht( DHTPIN, DHTTYPE );  // init
 
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//
+// Initialize DHT sensor for normal 16mhz Arduino
+//
+/////////////////////////////////////////////////////////////////////////////////////////
+MQ2 mq2(MQ2PIN);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -58,6 +67,37 @@ void CalibratePirSensor()
     delay(50);
 }
 
+//
+// SendSerialData
+//
+void SendSerialData(String & indentifier, const unsigned long & data)
+{
+    String str_serial = "";
+    str_serial = str_serial + indentifier;
+    str_serial = str_serial + "<";
+    str_serial = str_serial + data;
+    str_serial = str_serial + ">";
+
+    Serial.println(str_serial);
+}
+
+//
+// SendSerialData
+//
+void SendSerialData(String & indentifier, const float & data)
+{
+    char data_str[10] = {};
+    dtostrf(data, 2, 2, data_str);
+
+    String str_serial = "";
+    str_serial = str_serial + indentifier;
+    str_serial = str_serial + "<";
+    str_serial = str_serial + data_str;
+    str_serial = str_serial + ">";
+
+    Serial.println(str_serial);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 //SETUP
@@ -85,6 +125,10 @@ void setup()
     CalibratePirSensor();
 
 
+    //
+    // setup the mq2 sensor
+    //
+    mq2.Begin(false);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -108,17 +152,10 @@ void loop()
             pir_lock_Low = false;
 
             //
-            // serialized
+            // serialized and write to serial
             //
-            String str_serial = "";
-            str_serial = str_serial + "2-3<";
-            str_serial = str_serial + millis();
-            str_serial = str_serial + "<";
+            SendSerialData(String("2-3"), millis());
 
-            //
-            // write data to serial
-            //
-            Serial.println( str_serial );
             delay( 50 );
         }
         pir_take_Low_time = true;
@@ -144,20 +181,13 @@ void loop()
             //
             pir_lock_Low = true;
 
-            int pir_ended_at = millis() - pir_pause_time;
+            unsigned long pir_ended_at = millis() - pir_pause_time;
 
             //
-            // serialized
+            // serialized and write to serial
             // 
-            String str_serial = "";
-            str_serial = str_serial + "2-4<";
-            str_serial = str_serial + pir_ended_at;
-            str_serial = str_serial + "<";
+            SendSerialData(String("2-4"), pir_ended_at);
 
-            //
-            // write data to serial
-            // 
-            Serial.println(str_serial);
             delay( 50 );
         }
     }
@@ -173,37 +203,19 @@ void loop()
     dht_humidity_value    = dht.readHumidity();
     dht_temperature_value = dht.readTemperature();
 
-    //
-    // Print temp and humidity values to serial monitor
-    //
-    Serial.print( "Humidity: " );
-    Serial.print( dht_humidity_value );
-    Serial.print( " %, Temp: " );
-    Serial.print( dht_temperature_value );
-    Serial.println( " Celsius" );
 
     //
     // serialize data & write
     //
-    char temp_str[10] = {};
-    dtostrf(dht_temperature_value, 2, 2, temp_str);
+    SendSerialData(String("1-1"), dht_temperature_value);
+    SendSerialData(String("1-2"), dht_humidity_value);
 
-    String str_serial = "";
-    str_serial = str_serial + "1-1<";
-    str_serial = str_serial + temp_str;
-    str_serial = str_serial + ">";
+    //
+    // get data from mq2 sensor
+    //
+    SendSerialData(String("3-1"), mq2.ReadLPG());
+    SendSerialData(String("3-2"), mq2.ReadCO());
+    SendSerialData(String("3-3"), mq2.ReadSmoke());
 
-    Serial.println(str_serial);
-
-
-    char humidity_str[10] = {};
-    dtostrf(dht_humidity_value, 2, 2, humidity_str);
-
-    str_serial = "";
-    str_serial = str_serial + "1-2<";
-    str_serial = str_serial + humidity_str;
-    str_serial = str_serial + ">";
-
-    Serial.println(str_serial);
 }
 

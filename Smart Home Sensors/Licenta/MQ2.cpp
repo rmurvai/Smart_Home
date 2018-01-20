@@ -80,7 +80,7 @@ float MQ2::ReadLPG()
     }
     else 
     {
-        return lpg = MQGetGasPercentage(MQRead() / 10, GAS_LPG);
+        return lpg = MQGetGasPercentage(MQRead() / Ro, GAS_LPG);
     }
 }
 
@@ -98,7 +98,7 @@ float MQ2::ReadCO()
     }
     else 
     {
-        return co = MQGetGasPercentage(MQRead() / 10, GAS_CO);
+        return co = MQGetGasPercentage(MQRead() / Ro, GAS_CO);
     }
 }
 
@@ -116,7 +116,7 @@ float MQ2::ReadSmoke()
     }
     else 
     {
-        return smoke = MQGetGasPercentage(MQRead() / 10, GAS_SMOKE);
+        return smoke = MQGetGasPercentage(MQRead() / Ro, GAS_SMOKE);
     }
 }
 
